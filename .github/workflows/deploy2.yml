@@ -1,21 +1,18 @@
-name: Deploy
-
+name: Build and Deploy
 on: [push]
-
 jobs:
-  build:
-
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-    - name: deploy
-      run: |
-        git config --global user.name "n8n - deploy"
-        git config --global user.email "jan@n8n.io"
-        git remote add gh-token "https://${{ secrets.GH_TOKEN}}@github.com/janober/n8n-docs.git"
-        npm install
-        ./deploy.sh
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Build and Deploy
+      uses: grasilife/github-pages-deploy-action@master
+      env:
+        ACCESS_TOKEN: ${{ secrets.GH_TOKEN }}
+        BASE_BRANCH: master # The branch the action should deploy from.
+        CNAME: docs-staging.n8n.io
+        BRANCH: gh-pages # The branch the action should deploy to.
+        FOLDER: dist # The folder the action should deploy.
+        BUILD_SCRIPT: npm install && npm run-script build # The build script the action should run prior to deploying.
