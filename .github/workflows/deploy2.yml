@@ -14,5 +14,8 @@ jobs:
         node-version: 12.x
     - name: deploy
       run: |
+        git config --global user.name "n8n - deploy"
+        git config --global user.email "hello@n8n.io"
+        git remote add gh-token "https://${{ secrets.GH_TOKEN}}@github.com/janober/n8n-docs.git"
         npm install
         ./deploy.sh
